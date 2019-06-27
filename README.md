@@ -11,7 +11,7 @@ Lets specify requirements for our minimum viable product.
 All the above can be achive, without using room and live data, but here its being done more ***professionally*** (using room).
   
 ## Steps  
-1.  Start project with name: RoomLiveData and package: test.com.roomlivedata.  
+1.  Start project with name: RoomLiveData and package: com.roomlivedata 
 2.  Add dependencies in you build.gradle (Module: app) and sync:  
 ```
 dependencies {
@@ -63,11 +63,10 @@ public class Item {
 
 4. Create DAO interface named **ItemDao** with this code:
 ```
-
 @Dao
 public interface ItemDao {
 
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Item item);
 
     @Query("SELECT * from item_table ")
@@ -105,7 +104,7 @@ public abstract class ItemRoomDatabase extends RoomDatabase {
 }
 
 ```
-6. create ItemRepositor class:
+6. create **ItemRepository** class:
 ```
 public class ItemRepository {
     private ItemDao myItemsDao;
@@ -157,13 +156,12 @@ public class ItemViewModel extends AndroidViewModel {
     LiveData<List<Item>> getAllItems() { return allItems; }
 }
 ```
-8. Create a new res/layout file, named “item_layout” and add the following:
+8. Create a new res/layout file, named **item_layout** and add the following:
 ```
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tvCol1"
@@ -194,9 +192,10 @@ public class ItemViewModel extends AndroidViewModel {
         tools:text="placeholder text" />
 </LinearLayout>
 ```
-9. create a new res/layout file named “my_recylerview” and implement the RecylerView component:
+9. create a new res/layout file named **my_recylerview** and implement the RecylerView component:
 ```
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -211,9 +210,10 @@ public class ItemViewModel extends AndroidViewModel {
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         tools:listitem="@layout/item_layout" />
+
 </android.support.constraint.ConstraintLayout>
 ```
-10. Open your activity_main.xml file and add the RecylerView to your layout.
+10. Open your **activity_main.xml** file and add the RecylerView to your layout.
 ```
 <?xml version="1.0" encoding="utf-8"?>
 
@@ -229,22 +229,22 @@ public class ItemViewModel extends AndroidViewModel {
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-        
+
     </android.support.design.widget.AppBarLayout>
-    
-    <include layout="@layout/my_recylerview" />
-    
+
+    <include layout="@layout/my_recyclerview" />
+
 </android.support.design.widget.CoordinatorLayout>
 ```
 
-11. create an Adapter that extends the RecylerView.Adapter class
+11. create an Adapter named **ItemListAdapter** that extends the RecylerView.Adapter class
 ```
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
 
@@ -293,7 +293,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     }
 }
 ```
-12. open your MainActivity and add the RecylerView to your application’s onCreate() method:
+12. open your **MainActivity** class and add the RecylerView to your application’s onCreate() method:
 ```
 public class MainActivity extends AppCompatActivity {
 
@@ -337,11 +337,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intentNewItemActivity = new Intent(MainActivity.this, NewItemActivity.class);
                 startActivityForResult(intentNewItemActivity, REQUEST_CODE);
                 break;
-            case R.id.import_export:
-                Intent intentImportExport = new Intent(MainActivity.this, ImportExport.class);
-                startActivityForResult(intentImportExport, REQUEST_CODE);
-                //Toast.makeText(this, "To Do: Import Export Items", Toast.LENGTH_SHORT).show();
-                break;
         }
         return false;
     }
@@ -366,28 +361,25 @@ public class MainActivity extends AppCompatActivity {
 
 }
 ```
-13. To apply a few styles to our UI. Open the styles.xml file, and add the following:
+13. To apply a few styles to our UI. Open the **styles.xml** file, and add the following:
 ```
 <resources>
-        <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-            <item name="colorPrimary">@color/colorPrimary</item>
-            <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-            <item name="colorAccent">@color/colorAccent</item>
-        </style>
-        <style name="AppTheme.NoActionBar">
-            <item name="windowNoTitle">true</item>
-            <item name="windowActionBar">false</item>
-        </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
 </resources>
 ```
-14. Apply these styles to your app, by opening the Manifest and changing the android:theme attributes to reference these new styles:
+14. Apply these styles to your app, by opening the **Manifest** and changing the android:theme attributes to reference these new styles:
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jessicathornsby.roomlivedatademo">
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
+    package="com.roomlivedata">
 
     <application
         android:allowBackup="true"
@@ -396,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ImportExport"></activity>
+        <activity android:name=".NewItemActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -409,6 +401,7 @@ public class MainActivity extends AppCompatActivity {
         </activity>
         <activity android:name=".NewItemActivity" />
     </application>
+
 </manifest>
 ```
 15. Create an Activity where the user can add items to the Room database. Start by creating a new Activity, named **NewItemActivity** and a corresponding layout resource file.
@@ -426,19 +419,19 @@ public class MainActivity extends AppCompatActivity {
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etCol1"
-        android:hint="Col1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <EditText
+            android:id="@+id/etCol1"
+            android:hint="Col1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
-    <EditText
-        android:id="@+id/etCol2"
-        android:hint="Col2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <EditText
+            android:id="@+id/etCol2"
+            android:hint="Col2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
         <EditText
             android:id="@+id/etCol3"
             android:hint="Col2"
@@ -451,17 +444,18 @@ public class MainActivity extends AppCompatActivity {
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
-    <Button
-        android:id="@+id/save_item"
-        android:text="Save"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-   />
+        <Button
+            android:id="@+id/save_item"
+            android:text="Save"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            />
     </LinearLayout>
 
 </LinearLayout>
 ```
 
+and for **NewItemActivity** class:
 ```
 
 public class NewItemActivity extends AppCompatActivity {
@@ -498,7 +492,6 @@ public class NewItemActivity extends AppCompatActivity {
                     extras.putString("col3",c3);
                     extras.putString("col4",c4);
 
-
                     reply.putExtras(extras);
                     setResult(RESULT_OK, reply);
                 }
@@ -508,7 +501,8 @@ public class NewItemActivity extends AppCompatActivity {
     }
 }
 ```
-16. Adding navigation: Creating an action bar icon.  
+
+16. **Adding navigation**: Creating an action bar icon.  
 * Control-click your project’s “res” directory and select “New > Android Resource Directory.”  
 * Open the “Resource type” dropdown and select “menu.”  
 * The “Directory name” should update to “menu” automatically, but if it doesn’t then you’ll need to rename it manually. Click “OK.”  
@@ -520,24 +514,26 @@ You can now create the menu resource file:
 Open the “my_menu.xml” file, and add the following:  
 ```
 <?xml version="1.0" encoding="utf-8"?>
-   <menu xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-       <item
-           android:id="@+id/add_item"
-           android:orderInCategory="102"
-           android:title="@string/add_item"
-           android:icon="@drawable/add_icon"
-           app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/add_item"
+        android:orderInCategory="102"
+        android:title="@string/add_item"
+        android:icon="@drawable/add_icon"
+        app:showAsAction="ifRoom"/>
 
-   </menu>
+</menu>
    ```
-   This menu references an “add_item” string, so open your project’s res/values/strings.xml file and create this resource:  
+   
+This menu references an “add_item” string, so open your project’s **res/values/strings.xml** file and create this resource:  
    ```
-   <resources>
-   <string name="app_name">RoomLiveData Demo</string>
-   <string name="add_item">Add item</string>
+<resources>
+    <string name="app_name">RoomLiveData Demo</string>
+    <string name="add_item">Add item</string>
 </resources>
+```
 
 Next, we need to create the action bar’s “add_item” icon:  
 
@@ -549,10 +545,10 @@ Next, we need to create the action bar’s “add_item” icon:
 * To make sure our action bar icon stands out, open the “Theme” dropdown and select “HOLO_DARK.”  
 * Name this icon “add_icon.”  
 * “Click “Next,” followed by “Finish.”  
-   ```
-17. Here’s the completed NewItemActivity class:
-```
 
+17. Here’s the completed **NewItemActivity** class:
+
+```
 public class NewItemActivity extends AppCompatActivity {
 
     private  EditText  etCol1, etCol2, etCol3, etCol4;
@@ -596,6 +592,7 @@ public class NewItemActivity extends AppCompatActivity {
         });
     }
 }
+
 ```
 
 ## Credits
