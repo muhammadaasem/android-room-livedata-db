@@ -157,6 +157,357 @@ public class ItemViewModel extends AndroidViewModel {
     LiveData<List<Item>> getAllItems() { return allItems; }
 }
 ```
+8. Create a new res/layout file, named “item_layout” and add the following:
+```
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tvCol1"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="placeholder text" />
+
+    <TextView
+        android:id="@+id/tvCol2"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="placeholder text" />
+
+    <TextView
+        android:id="@+id/tvCol3"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="placeholder text" />
+
+    <TextView
+        android:id="@+id/tvCol4"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="placeholder text" />
+</LinearLayout>
+```
+9. create a new res/layout file named “my_recylerview” and implement the RecylerView component:
+```
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        tools:listitem="@layout/item_layout" />
+</android.support.constraint.ConstraintLayout>
+```
+10. Open your activity_main.xml file and add the RecylerView to your layout.
+```
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        
+    </android.support.design.widget.AppBarLayout>
+    
+    <include layout="@layout/my_recylerview" />
+    
+</android.support.design.widget.CoordinatorLayout>
+```
+
+11. create an Adapter that extends the RecylerView.Adapter class
+```
+public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
+
+    class ItemViewHolder extends RecyclerView.ViewHolder {
+        private final TextView tvCol1,tvCol2,tvCol3,tvCol4;
+
+        private ItemViewHolder(View itemView) {
+            super(itemView);
+            tvCol1 = itemView.findViewById(R.id.tvCol1);
+            tvCol2 = itemView.findViewById(R.id.tvCol2);
+            tvCol3 = itemView.findViewById(R.id.tvCol3);
+            tvCol4 = itemView.findViewById(R.id.tvCol4);
+        }
+    }
+
+    private List<Item> myItems;
+    private final LayoutInflater myInflater;
+
+    ItemListAdapter(Context context) { myInflater = LayoutInflater.from(context); }
+
+    @Override
+    public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = myInflater.inflate(R.layout.item_layout, parent, false);
+        return new ItemViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(ItemViewHolder holder, int position) {
+        Item current = myItems.get(position);
+        holder.tvCol1.setText(current.mCol1_id);
+        holder.tvCol2.setText(current.mCol2);
+        holder.tvCol3.setText(current.mCol3);
+        holder.tvCol4.setText(current.mCol4);
+    }
+
+    @Override
+    public int getItemCount() {
+        if (myItems != null)
+            return myItems.size();
+        else return 0;
+    }
+
+    void setItems(List<Item> items){
+        myItems = items;
+        notifyDataSetChanged();
+    }
+}
+```
+12. open your MainActivity and add the RecylerView to your application’s onCreate() method:
+```
+public class MainActivity extends AppCompatActivity {
+
+    public static final int REQUEST_CODE = 1;
+    private ItemViewModel myItemViewModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
+        RecyclerView myRecyclerView = findViewById(R.id.recyclerview);
+        final ItemListAdapter myAdapter = new ItemListAdapter(this);
+        myRecyclerView.setAdapter(myAdapter);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        myItemViewModel = ViewModelProviders.of(this).get(ItemViewModel.class);
+        myItemViewModel.getAllItems().observe(this, new Observer<List<Item>>() {
+
+            @Override
+            public void onChanged(@Nullable final List<Item> items) {
+                myAdapter.setItems(items);
+            }
+
+        });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_item:
+                Intent intentNewItemActivity = new Intent(MainActivity.this, NewItemActivity.class);
+                startActivityForResult(intentNewItemActivity, REQUEST_CODE);
+                break;
+            case R.id.import_export:
+                Intent intentImportExport = new Intent(MainActivity.this, ImportExport.class);
+                startActivityForResult(intentImportExport, REQUEST_CODE);
+                //Toast.makeText(this, "To Do: Import Export Items", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return false;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String c1, c2, c3, c4;
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+
+
+            c1=data.getExtras().getString("col1");
+            c2=data.getExtras().getString("col2");
+            c3=data.getExtras().getString("col3");
+            c4=data.getExtras().getString("col4");
+
+            Item item = new Item(c1,c2,c3,c4);
+            myItemViewModel.insert(item);
+
+        }
+
+    }
+
+}
+```
+13. To apply a few styles to our UI. Open the styles.xml file, and add the following:
+```
+<resources>
+        <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+            <item name="colorPrimary">@color/colorPrimary</item>
+            <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+            <item name="colorAccent">@color/colorAccent</item>
+        </style>
+        <style name="AppTheme.NoActionBar">
+            <item name="windowNoTitle">true</item>
+            <item name="windowActionBar">false</item>
+        </style>
+</resources>
+```
+14. Apply these styles to your app, by opening the Manifest and changing the android:theme attributes to reference these new styles:
+```
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jessicathornsby.roomlivedatademo">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ImportExport"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".NewItemActivity" />
+    </application>
+</manifest>
+```
+15. Create an Activity where the user can add items to the Room database. Start by creating a new Activity, named **NewItemActivity** and a corresponding layout resource file.
+```
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etCol1"
+        android:hint="Col1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <EditText
+        android:id="@+id/etCol2"
+        android:hint="Col2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+        <EditText
+            android:id="@+id/etCol3"
+            android:hint="Col2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <EditText
+            android:id="@+id/etCol4"
+            android:hint="Col2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    <Button
+        android:id="@+id/save_item"
+        android:text="Save"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+   />
+    </LinearLayout>
+
+</LinearLayout>
+```
+
+```
+
+public class NewItemActivity extends AppCompatActivity {
+
+    private  EditText  etCol1, etCol2, etCol3, etCol4;
+    Bundle extras = new Bundle();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_item);
+        etCol1 = findViewById(R.id.etCol1);
+        etCol2 = findViewById(R.id.etCol2);
+        etCol3 = findViewById(R.id.etCol3);
+        etCol4 = findViewById(R.id.etCol4);
+
+
+        final Button button = findViewById(R.id.save_item);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent reply = new Intent();
+                if (TextUtils.isEmpty(etCol1.getText())) {
+                    setResult(RESULT_CANCELED, reply);
+
+                } else {
+                    String c1,c2,c3,c4;
+                    c1= etCol1.getText().toString();
+                    c2= etCol2.getText().toString();
+                    c3= etCol3.getText().toString();
+                    c4= etCol4.getText().toString();
+
+                    extras.putString("col1",c1);
+                    extras.putString("col2",c2);
+                    extras.putString("col3",c3);
+                    extras.putString("col4",c4);
+
+
+                    reply.putExtras(extras);
+                    setResult(RESULT_OK, reply);
+                }
+                finish();
+            }
+        });
+    }
+}
+```
 
 ## Credits
 [1]  https://www.androidauthority.com/android-architecture-components-949100/  
