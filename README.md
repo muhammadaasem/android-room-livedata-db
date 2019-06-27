@@ -13,13 +13,26 @@ All the above can be achive, without using room and live data, but here its bein
 ## Steps  
 1.  Start project with name: RoomLiveData and package: test.com.roomlivedata.  
 2.  Add dependencies in you build.gradle (Module: app) and sync:  
-> // Room dependency  
->  implementation 'android.arch.persistence.room:runtime:1.1.1'  
->  annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'  
->  // LiveData dependency  
->  implementation 'android.arch.lifecycle:viewmodel:1.1.1'  
->  annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'  
-3. Create a new class ***Item** with the following code:  
+```
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.android.support:design:28.0.0'
+    // Room dependency  
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+    androidTestImplementation "android.arch.persistence.room:testing:1.1.1"
+    // LiveData dependency 
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+}
+```
+ 
+3. Create a new class **Item** with the following code:  
 
 >  
 > @Entity(tableName = "item_table")  
@@ -38,4 +51,5 @@ All the above can be achive, without using room and live data, but here its bein
 
 ## Credits
 [1]  https://www.androidauthority.com/android-architecture-components-949100/  
+[2] https://riggaroo.co.za/android-architecture-components-looking-room-livedata-part-1/  
 
