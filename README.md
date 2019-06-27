@@ -32,15 +32,8 @@ dependencies {
 }
 ```
  
-3. Create a new class **Item** with the following code:  
+3. Create a class **Item** with the following code:  
 ```
-package com.jessicathornsby.roomlivedatademo;
-
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
-import android.arch.persistence.room.PrimaryKey;
-
 @Entity(tableName = "item_table")
 public class Item {
 
@@ -68,6 +61,102 @@ public class Item {
 }
 ```
 
+4. Create DAO interface named **ItemDao** with this code:
+```
+
+@Dao
+public interface ItemDao {
+
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    void insert(Item item);
+
+    @Query("SELECT * from item_table ")
+    LiveData<List<Item>> getItemList();
+
+    @Update
+    void UpdateItem(Item item);
+
+    @Delete
+    void delete(Item item);
+
+}
+```
+
+5. create room database by creating class called **ItemRoomDatabase** as:  
+```
+@Database(entities = {Item.class}, version = 1, exportSchema = false)
+public abstract class ItemRoomDatabase extends RoomDatabase {
+
+    private static ItemRoomDatabase INSTANCE;
+    public abstract ItemDao itemDao();
+
+    static ItemRoomDatabase getDatabase(final Context context) {
+        if (INSTANCE == null) {
+            synchronized (ItemRoomDatabase.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            ItemRoomDatabase.class, "itemDB")
+                            .build();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+}
+
+```
+6. create ItemRepositor class:
+```
+public class ItemRepository {
+    private ItemDao myItemsDao;
+    private LiveData<List<Item>> itemsList;
+
+    LiveData<List<Item>> getAllItems() {
+        return itemsList;
+    }
+
+    public void insert (Item item) {
+        new newAsyncTask(myItemsDao).execute(item);
+    }
+    private static class newAsyncTask extends AsyncTask<Item, Void, Void> {
+        private ItemDao myAsyncDao;
+
+        newAsyncTask(ItemDao dao) {
+            myAsyncDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Item... params) {
+            myAsyncDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    ItemRepository(Application application) {
+        ItemRoomDatabase database = ItemRoomDatabase.getDatabase(application);
+        myItemsDao = database.itemDao();
+        itemsList = myItemsDao.getItemList();
+    }
+}
+```
+
+7. create a class **ItemViewModel** as:
+```
+public class ItemViewModel extends AndroidViewModel {
+
+    private ItemRepository myRepository;
+    private LiveData<List<Item>> allItems;
+
+    public ItemViewModel (Application application) {
+        super(application);
+        myRepository = new ItemRepository(application);
+        allItems = myRepository.getAllItems();
+    }
+
+    public void insert(Item item) { myRepository.insert(item); }
+    LiveData<List<Item>> getAllItems() { return allItems; }
+}
+```
 
 ## Credits
 [1]  https://www.androidauthority.com/android-architecture-components-949100/  
