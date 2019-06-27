@@ -508,6 +508,95 @@ public class NewItemActivity extends AppCompatActivity {
     }
 }
 ```
+16. Adding navigation: Creating an action bar icon.  
+* Control-click your project’s “res” directory and select “New > Android Resource Directory.”  
+* Open the “Resource type” dropdown and select “menu.”  
+* The “Directory name” should update to “menu” automatically, but if it doesn’t then you’ll need to rename it manually. Click “OK.”  
+
+You can now create the menu resource file:
+* Control-click your project’s “menu” directory and select “New > Menu resource file.”  
+* Name this file “my_menu.”  
+* Click “OK.”  
+Open the “my_menu.xml” file, and add the following:  
+```
+<?xml version="1.0" encoding="utf-8"?>
+   <menu xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto">
+
+       <item
+           android:id="@+id/add_item"
+           android:orderInCategory="102"
+           android:title="@string/add_item"
+           android:icon="@drawable/add_icon"
+           app:showAsAction="ifRoom"/>
+
+   </menu>
+   ```
+   This menu references an “add_item” string, so open your project’s res/values/strings.xml file and create this resource:  
+   ```
+   <resources>
+   <string name="app_name">RoomLiveData Demo</string>
+   <string name="add_item">Add item</string>
+</resources>
+
+Next, we need to create the action bar’s “add_item” icon:  
+
+* Select “File > New > Image Asset” from the Android Studio toolbar.  
+* Set the “Icon Type” dropdown to “Action Bar and Tab Icons.”  
+* Click the “Clip Art” button.  
+* Choose a drawable; I’m using “add circle.” 
+* Click “OK.”  
+* To make sure our action bar icon stands out, open the “Theme” dropdown and select “HOLO_DARK.”  
+* Name this icon “add_icon.”  
+* “Click “Next,” followed by “Finish.”  
+   ```
+17. Here’s the completed NewItemActivity class:
+```
+
+public class NewItemActivity extends AppCompatActivity {
+
+    private  EditText  etCol1, etCol2, etCol3, etCol4;
+    Bundle extras = new Bundle();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_item);
+        etCol1 = findViewById(R.id.etCol1);
+        etCol2 = findViewById(R.id.etCol2);
+        etCol3 = findViewById(R.id.etCol3);
+        etCol4 = findViewById(R.id.etCol4);
+
+
+        final Button button = findViewById(R.id.save_item);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent reply = new Intent();
+                if (TextUtils.isEmpty(etCol1.getText())) {
+                    setResult(RESULT_CANCELED, reply);
+
+                } else {
+                    String c1,c2,c3,c4;
+                    c1= etCol1.getText().toString();
+                    c2= etCol2.getText().toString();
+                    c3= etCol3.getText().toString();
+                    c4= etCol4.getText().toString();
+
+                    extras.putString("col1",c1);
+                    extras.putString("col2",c2);
+                    extras.putString("col3",c3);
+                    extras.putString("col4",c4);
+
+
+                    reply.putExtras(extras);
+                    setResult(RESULT_OK, reply);
+                }
+                finish();
+            }
+        });
+    }
+}
+```
 
 ## Credits
 [1]  https://www.androidauthority.com/android-architecture-components-949100/  
