@@ -33,20 +33,40 @@ dependencies {
 ```
  
 3. Create a new class **Item** with the following code:  
+```
+package com.jessicathornsby.roomlivedatademo;
 
->  
-> @Entity(tableName = "item_table")  
-> public class Item {  
->    @NonNull  
->    @PrimaryKey  
->    @ColumnInfo(name = "item")  
->    private String mItem;  
->
->    public Item(@NonNull String item) {  
->        this.mItem = item;}  
->
->    public String getItem(){return this.mItem;}  
-> }    
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.support.annotation.NonNull;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity(tableName = "item_table")
+public class Item {
+
+    @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "col1_id")
+    public String mCol1_id;
+
+    @ColumnInfo(name = "col2")
+    public String mCol2;
+
+    @ColumnInfo(name = "col3")
+    public String mCol3;
+
+    @ColumnInfo(name = "col4")
+    public String mCol4;
+
+    public Item(@NonNull String mCol1_id, String mCol2, String mCol3, String mCol4) {
+        this.mCol1_id = mCol1_id;
+        this.mCol2 = mCol2;
+        this.mCol3 = mCol3;
+        this.mCol4 = mCol4;
+    }
+
+}
+```
 
 
 ## Credits
