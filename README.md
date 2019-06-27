@@ -5,14 +5,12 @@ The git repo gives you a demo of how to get started with room and livedata based
 ## Requirements
 Lets specify requirements for our minimum viable product.  
 *  A four column table with columns (col1_id, col2, col3, col4) will capture the data in separate screen (activity).  
-*  The inserted data can be viewed and searched.  
-*  On simple tap, user can edit the data.  
-*  On long tap, user can delete the data.  
-All the above can be achive, without using room and live data, but here its being done more ***professionally*** (using room).
+*  The inserted data can be viewed in a list format.    
+All the above can be achive, without using room and live data, but here its being done more *professionally* (using room).
   
 ## Steps  
-1.  Start project with name: RoomLiveData and package: com.roomlivedata 
-2.  Add dependencies in you build.gradle (Module: app) and sync:  
+1.  Start project with any name and package (we have used name: *RoomLiveData* and package: *com.roomlivedata*)
+2.  Add Room and LiveData dependencies in you build.gradle (Module: app) and sync:  
 ```
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
