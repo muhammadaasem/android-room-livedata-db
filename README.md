@@ -9,7 +9,7 @@ Lets specify requirements for our minimum viable product.
 All the above can be achive, without using room and live data, but here its being done more *professionally* (using room).
   
 ## Steps  
-1.  Start project with any name and package (we have used name: *RoomLiveData* and package: *com.roomlivedata*)
+1.  Start project with any name and package (we have used name: *RoomLiveDataDemo* and package: *com.roomlivedata*)
 2.  Add Room and LiveData dependencies in you build.gradle (Module: app) and sync:  
 ```
 dependencies {
