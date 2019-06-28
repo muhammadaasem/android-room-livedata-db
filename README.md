@@ -293,6 +293,21 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 ```
 12. open your **MainActivity** class and add the RecylerView to your application’s onCreate() method:
 ```
+package com.roomlivedata;
+
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -341,17 +356,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String c1, c2, c3, c4;
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-
-
-            c1=data.getExtras().getString("col1");
-            c2=data.getExtras().getString("col2");
-            c3=data.getExtras().getString("col3");
-            c4=data.getExtras().getString("col4");
-
-            Item item = new Item(c1,c2,c3,c4);
+            Item item = (Item) data.getSerializableExtra("ITEM");
             myItemViewModel.insert(item);
 
         }
@@ -458,9 +465,9 @@ and for **NewItemActivity** class:
 ```
 public class NewItemActivity extends AppCompatActivity {
 
-    private EditText etCol1, etCol2, etCol3, etCol4;
-    Bundle extras = new Bundle();
-
+    private  EditText  etCol1, etCol2, etCol3, etCol4;
+    Bundle bundle = new Bundle();
+    Item item;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -470,27 +477,20 @@ public class NewItemActivity extends AppCompatActivity {
         etCol3 = findViewById(R.id.etCol3);
         etCol4 = findViewById(R.id.etCol4);
 
+        item=new Item(etCol1.getText().toString(),etCol2.getText().toString(),etCol3.getText().toString(),etCol4.getText().toString());
 
         final Button button = findViewById(R.id.save_item);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent reply = new Intent();
-                if (TextUtils.isEmpty(etCol1.getText())) {
+                item=new Item(etCol1.getText().toString(),etCol2.getText().toString(),etCol3.getText().toString(),etCol4.getText().toString());
+
+                if (TextUtils.isEmpty(item.mCol1_id)) {
                     setResult(RESULT_CANCELED, reply);
 
                 } else {
-                    String c1,c2,c3,c4;
-                    c1= etCol1.getText().toString();
-                    c2= etCol2.getText().toString();
-                    c3= etCol3.getText().toString();
-                    c4= etCol4.getText().toString();
-
-                    extras.putString("col1",c1);
-                    extras.putString("col2",c2);
-                    extras.putString("col3",c3);
-                    extras.putString("col4",c4);
-
-                    reply.putExtras(extras);
+                    bundle.putSerializable("ITEM",item);
+                    reply.putExtras(bundle);
                     setResult(RESULT_OK, reply);
                 }
                 finish();
