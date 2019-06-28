@@ -33,7 +33,7 @@ dependencies {
 3. Create a class **Item** with the following code:  
 ```
 @Entity(tableName = "item_table")
-public class Item {
+public class Item implements Serializable {
 
     @NonNull
     @PrimaryKey
