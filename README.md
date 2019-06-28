@@ -190,7 +190,7 @@ public class ItemViewModel extends AndroidViewModel {
         tools:text="placeholder text" />
 </LinearLayout>
 ```
-9. create a new res/layout file named **my_recylerview** and implement the RecylerView component:
+9. create a new res/layout file named **my_recycleview** and implement the RecylerView component:
 ```
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -211,7 +211,7 @@ public class ItemViewModel extends AndroidViewModel {
 
 </android.support.constraint.ConstraintLayout>
 ```
-10. Open your **activity_main.xml** file and add the RecylerView to your layout.
+10. Open your **activity_main.xml** file and add the RecyclerView to your layout.
 ```
 <?xml version="1.0" encoding="utf-8"?>
 
@@ -237,7 +237,7 @@ public class ItemViewModel extends AndroidViewModel {
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/my_recyclerview" />
+    <include layout="@layout/my_recycleview" />
 
 </android.support.design.widget.CoordinatorLayout>
 ```
@@ -293,6 +293,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
 ```
 12. open your **MainActivity** class and add the RecylerView to your application’s onCreate() method:
 ```
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE = 1;
@@ -306,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        RecyclerView myRecyclerView = findViewById(R.id.recyclerview);
+        RecyclerView myRecyclerView = findViewById(R.id.recycleview);
         final ItemListAdapter myAdapter = new ItemListAdapter(this);
         myRecyclerView.setAdapter(myAdapter);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -402,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
 
 </manifest>
 ```
-15. Create an Activity where the user can add items to the Room database. Start by creating a new Activity, named **NewItemActivity** and a corresponding layout resource file.
+15. Create an Activity where the user can add items to the Room database. Start by creating a new Activity, named **NewItemActivity** and a corresponding layout resource file **activity_new_item**.
 ```
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -455,16 +456,15 @@ public class MainActivity extends AppCompatActivity {
 
 and for **NewItemActivity** class:
 ```
-
 public class NewItemActivity extends AppCompatActivity {
 
-    private  EditText  etCol1, etCol2, etCol3, etCol4;
+    private EditText etCol1, etCol2, etCol3, etCol4;
     Bundle extras = new Bundle();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item);
+        setContentView(R.layout.activity_new_item);
         etCol1 = findViewById(R.id.etCol1);
         etCol2 = findViewById(R.id.etCol2);
         etCol3 = findViewById(R.id.etCol3);
@@ -555,7 +555,7 @@ public class NewItemActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item);
+        setContentView(R.layout.activity_new_item);
         etCol1 = findViewById(R.id.etCol1);
         etCol2 = findViewById(R.id.etCol2);
         etCol3 = findViewById(R.id.etCol3);
