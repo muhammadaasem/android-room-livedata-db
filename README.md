@@ -597,3 +597,7 @@ public class NewItemActivity extends AppCompatActivity {
 [1]  https://www.androidauthority.com/android-architecture-components-949100/  
 [2] https://riggaroo.co.za/android-architecture-components-looking-room-livedata-part-1/  
 
+## see also
+* https://www.techotopia.com/index.php/An_Android_Room_Database_and_Repository_Tutorial  
+
+
